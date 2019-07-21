@@ -9,5 +9,5 @@ import java.util.List;
 @Service
 public class CoursesService {
 
-    String courses;
+    List<Course> courses;
 }

@@ -25,43 +25,24 @@ public class MessageListener {
     @Autowired
     CoursesService service;
 
-    String messages;
+    //MessageTest is just for debugging
+    @Autowired
+    MessageTest messageTest;
 
     @JmsListener(destination = "standalone.queue")
     public void consume(String messages) {
 
-        LOGGER.info("Consumes : started with message " + messages);
-        service.setCourses(messages);
+        LOGGER.info("Consumes : started with message : " + messages);
+
+        messageTest.setMessage(messages);
+
+        List<Course> coursesFromJson = new GsonBuilder()
+                .create()
+                .fromJson(messages, new TypeToken<List<Course>>() {
+                }.getType());
+
+        service.setCourses(coursesFromJson);
+
+        LOGGER.info("Messages consume ended : " + service.getCourses().toString());
     }
-
-
-    /*private List<Course> setMessage(String message) {
-//        List<Course> messageFromJson = new GsonBuilder()
-//                .create()
-//                .fromJson(message, new TypeToken<List<Course>>(){}.getType());
-
-        Gson gson = new Gson();
-        CoursesService messageFromJson = gson.fromJson(message, CoursesService.class);
-
-        LOGGER.info("setMessage : started with message " + message);
-
-        List<Course> coursesFromServer = messageFromJson.getCourses();
-
-        List<Course> returnCourseList = new ArrayList<>();
-
-        for(Course c : coursesFromServer){
-            Course course = new Course();
-
-            course.setAddDescription(c.getAddDescription());
-            course.setAddId(c.getAddId());
-            course.setAddName(c.getAddName());
-            course.setAddPrice(c.getAddPrice());
-
-            returnCourseList.add(course);
-        }
-
-        return returnCourseList;
-    }*/
-
-
 }
