@@ -29,7 +29,7 @@ public class MessageListener {
     @Autowired
     MessageTest messageTest;
 
-    @JmsListener(destination = "standalone.queue")
+    @JmsListener(destination = "galileu.queue")
     public void consume(String messages) {
 
         LOGGER.info("Consumes : started with message : " + messages);
